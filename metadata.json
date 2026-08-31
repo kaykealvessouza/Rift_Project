@@ -1,0 +1,6 @@
+{
+  "name": "Rift - Gerenciador de Coleção e Decks",
+  "description": "Gerenciador completo de coleção e decks do TCG Riftbound com catálogo de cartas, validação de regras oficiais, cálculo de conclusão e importação/exportação.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
