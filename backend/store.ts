@@ -1,4 +1,16 @@
+import fs from 'fs';
+import path from 'path';
 import { Deck, DeckCard } from './types.js';
+
+const DATA_DIR = path.join(process.cwd(), 'data');
+const DATA_FILE = path.join(DATA_DIR, 'store.json');
+
+interface PersistedData {
+  nextDeckId: number;
+  collection: Record<string, number>;
+  decks: Deck[];
+  deckCards: Record<string, DeckCard[]>;
+}
 
 class DataStore {
   // cardId -> quantity
@@ -13,10 +25,88 @@ class DataStore {
   private nextDeckId = 1;
 
   constructor() {
+    this.init();
+  }
+
+  private init() {
+    try {
+      if (fs.existsSync(DATA_FILE)) {
+        const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+        const parsed: PersistedData = JSON.parse(raw);
+
+        if (parsed && typeof parsed === 'object') {
+          this.nextDeckId = typeof parsed.nextDeckId === 'number' ? parsed.nextDeckId : 1;
+          this.decks = Array.isArray(parsed.decks) ? parsed.decks : [];
+
+          this.collection.clear();
+          if (parsed.collection && typeof parsed.collection === 'object') {
+            for (const [cardId, qty] of Object.entries(parsed.collection)) {
+              if (typeof qty === 'number' && qty > 0) {
+                this.collection.set(cardId, qty);
+              }
+            }
+          }
+
+          this.deckCards.clear();
+          if (parsed.deckCards && typeof parsed.deckCards === 'object') {
+            for (const [deckIdStr, cards] of Object.entries(parsed.deckCards)) {
+              const deckId = parseInt(deckIdStr, 10);
+              if (!isNaN(deckId) && Array.isArray(cards)) {
+                this.deckCards.set(deckId, cards);
+              }
+            }
+          }
+
+          console.log(`[DataStore] Dados carregados de data/store.json: ${this.collection.size} cartas na coleção, ${this.decks.length} decks.`);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('[DataStore] Erro ao ler store.json, inicializando com seed padrão:', err);
+    }
+
+    // Inicializa com dados padrão e persiste o primeiro arquivo
     this.seedInitialData();
+    this.save();
+  }
+
+  public save() {
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+
+      const collectionObj: Record<string, number> = {};
+      for (const [cardId, qty] of this.collection.entries()) {
+        collectionObj[cardId] = qty;
+      }
+
+      const deckCardsObj: Record<string, DeckCard[]> = {};
+      for (const [deckId, cards] of this.deckCards.entries()) {
+        deckCardsObj[deckId.toString()] = cards;
+      }
+
+      const payload: PersistedData = {
+        nextDeckId: this.nextDeckId,
+        collection: collectionObj,
+        decks: this.decks,
+        deckCards: deckCardsObj
+      };
+
+      const tmpFile = `${DATA_FILE}.tmp`;
+      fs.writeFileSync(tmpFile, JSON.stringify(payload, null, 2), 'utf-8');
+      fs.renameSync(tmpFile, DATA_FILE);
+    } catch (err) {
+      console.error('[DataStore] Erro ao salvar dados no arquivo JSON:', err);
+    }
   }
 
   private seedInitialData() {
+    this.collection.clear();
+    this.decks = [];
+    this.deckCards.clear();
+    this.nextDeckId = 1;
+
     // Seed initial player collection with real cards from RiftScribe
     this.collection.set('ogn-247-298', 1); // Daughter of the Void (Legend)
     this.collection.set('ogn-251-298', 1); // Loose Cannon (Legend)
@@ -58,15 +148,14 @@ class DataStore {
   }
 
   public getNextDeckId(): number {
-    return this.nextDeckId++;
+    const id = this.nextDeckId++;
+    this.save();
+    return id;
   }
 
   public resetAll() {
-    this.collection.clear();
-    this.decks = [];
-    this.deckCards.clear();
-    this.nextDeckId = 1;
     this.seedInitialData();
+    this.save();
   }
 }
 

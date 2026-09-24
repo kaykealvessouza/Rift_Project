@@ -1,0 +1,98 @@
+{
+  "nextDeckId": 3,
+  "collection": {
+    "ogn-247-298": 1,
+    "ogn-251-298": 1,
+    "ogn-027-298": 2,
+    "ogn-030-298": 2,
+    "ogn-039-298": 2,
+    "ogn-007-298": 15,
+    "ogn-042-298": 15,
+    "ogn-275-298": 3,
+    "ogn-276-298": 3,
+    "ogn-001-298": 3,
+    "ogn-002-298": 3,
+    "ogn-003-298": 3,
+    "ogn-004-298": 3,
+    "ogn-005-298": 3,
+    "ogn-006-298": 3,
+    "ogn-008-298": 3,
+    "ogn-009-298": 3,
+    "ogn-010-298": 3
+  },
+  "decks": [
+    {
+      "id": 1,
+      "name": "Fury Aggro"
+    }
+  ],
+  "deckCards": {
+    "1": [
+      {
+        "cardId": "ogn-247-298",
+        "quantity": 1,
+        "zone": "LEGEND"
+      },
+      {
+        "cardId": "ogn-027-298",
+        "quantity": 1,
+        "zone": "CHAMPION"
+      },
+      {
+        "cardId": "ogn-275-298",
+        "quantity": 3,
+        "zone": "BATTLEFIELD"
+      },
+      {
+        "cardId": "ogn-007-298",
+        "quantity": 12,
+        "zone": "RUNE"
+      },
+      {
+        "cardId": "ogn-001-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-002-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-003-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-004-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-005-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-006-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-008-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-009-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      },
+      {
+        "cardId": "ogn-010-298",
+        "quantity": 3,
+        "zone": "MAIN"
+      }
+    ]
+  }
+}

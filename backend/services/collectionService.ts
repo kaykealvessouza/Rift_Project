@@ -52,6 +52,7 @@ export class CollectionService {
     const currentQty = store.collection.get(cardId) || 0;
     const newQty = currentQty + quantity;
     store.collection.set(cardId, newQty);
+    store.save();
 
     return {
       card,
@@ -76,9 +77,11 @@ export class CollectionService {
     const newQty = currentQty - quantity;
     if (newQty <= 0) {
       store.collection.delete(cardId);
+      store.save();
       return { cardId, quantity: 0 };
     } else {
       store.collection.set(cardId, newQty);
+      store.save();
       return { cardId, quantity: newQty };
     }
   }
@@ -90,6 +93,7 @@ export class CollectionService {
       throw error;
     }
     store.collection.delete(cardId);
+    store.save();
   }
 
   public getCardQuantity(cardId: string): number {

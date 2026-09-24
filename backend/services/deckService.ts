@@ -36,6 +36,7 @@ export class DeckService {
 
     store.decks.push(newDeck);
     store.deckCards.set(newDeck.id, []);
+    store.save();
 
     return newDeck;
   }
@@ -65,6 +66,7 @@ export class DeckService {
     }
 
     deck.name = trimmedName;
+    store.save();
     return deck;
   }
 
@@ -78,6 +80,7 @@ export class DeckService {
 
     store.decks.splice(index, 1);
     store.deckCards.delete(id);
+    store.save();
   }
 
   public getDeckCards(deckId: number): DeckCard[] {
@@ -141,6 +144,7 @@ export class DeckService {
     }
 
     store.deckCards.set(deckId, cards);
+    store.save();
     return cards;
   }
 
@@ -162,6 +166,7 @@ export class DeckService {
     }
 
     store.deckCards.set(deckId, filtered);
+    store.save();
   }
 
   public decreaseCardInDeck(deckId: number, cardId: string, quantity = 1): DeckCard[] {
@@ -186,6 +191,7 @@ export class DeckService {
 
     const updated = cards.filter((c) => c.quantity > 0);
     store.deckCards.set(deckId, updated);
+    store.save();
     return updated;
   }
 

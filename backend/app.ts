@@ -39,31 +39,3 @@ export function createApiRouter(): Router {
 
   return apiRouter;
 }
-
-export function createBackendApp() {
-  const app = express();
-
-  // CORS headers
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    if (req.method === 'OPTIONS') {
-      res.sendStatus(200);
-      return;
-    }
-    next();
-  });
-
-  app.use(express.json());
-
-  // Health check endpoint
-  app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', service: 'Rift REST Backend', timestamp: new Date().toISOString() });
-  });
-
-  // Mount API router
-  app.use('/api', createApiRouter());
-
-  return app;
-}
