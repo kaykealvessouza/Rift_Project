@@ -1,103 +1,190 @@
-# Rift TCG — Deck & Collection Manager
+Rift TCG — Deck & Collection Manager
 
-Aplicação full-stack desenvolvida para gerenciar coleções e construir decks para o TCG **Riftbound (Rift)**.
+Aplicação full-stack para gerenciamento de coleções e construção de decks para o TCG Riftbound (Rift).
 
-A arquitetura foi projetada com estrita separação entre camadas:
-- **/backend**: Servidor HTTP REST (Node.js + Express + TypeScript) contendo todas as regras de negócio, modelos de dados, validação oficial de zonas/regras de deck, cálculo de completude e parser de importação/exportação.
-- **/src**: Frontend em React 19 + TypeScript + Tailwind CSS, consumindo o backend exclusivamente via chamadas HTTP (`fetch` em `/src/api/`).
+O projeto foi desenvolvido como um projeto pessoal de estudo e prática de desenvolvimento full-stack, envolvendo construção de API REST, desenvolvimento de interface web, modelagem de regras de negócio, validação de decks, importação/exportação de dados e integração entre frontend e backend.
 
----
+Durante o desenvolvimento, foram utilizadas ferramentas de Inteligência Artificial como apoio ao processo de programação, principalmente o Google AI Studio e Claude. A IA foi utilizada como ferramenta de auxílio para consulta, explicação de conceitos, implementação e revisão de códigos, investigação de erros e apoio na implementação de determinadas funcionalidades. As decisões de arquitetura, integração, testes, ajustes e validação do funcionamento do projeto foram realizadas durante o processo de desenvolvimento.
 
-## 🚀 Como Executar o Projeto
+O uso de IA neste projeto é parte do processo de desenvolvimento e não significa que o projeto tenha sido simplesmente gerado automaticamente. A IA foi utilizada como ferramenta de apoio ao desenvolvimento e aprendizado.
 
-### Pré-requisitos
-- **Node.js** v18+ instalado
-- **npm** ou **yarn**
+🏗️ Arquitetura
 
-### 1. Instalação das Dependências
-```bash
+A aplicação possui separação entre frontend e backend, com comunicação exclusivamente através de uma API HTTP REST.
+
+Backend
+
+Localizado em /backend, o backend é responsável por:
+
+API REST utilizando Node.js + Express + TypeScript
+Regras de negócio
+Modelos e tipos de dados
+Validação das regras de construção de decks
+Gerenciamento da coleção
+Cálculo de completude da coleção e dos decks
+Importação e exportação de decks e coleções
+Paginação e filtros do catálogo
+Frontend
+
+Localizado em /src, o frontend é uma SPA desenvolvida com:
+
+React 19
+TypeScript
+Tailwind CSS
+Vite
+
+O frontend não acessa diretamente os dados ou regras internas do backend. A comunicação é realizada através de uma camada de cliente HTTP localizada em /src/api/.
+
+🚀 Como Executar
+Pré-requisitos
+Node.js 18 ou superior
+npm ou yarn
+1. Instalar dependências
 npm install
-```
+2. Executar em desenvolvimento
 
-### 2. Execução em Modo de Desenvolvimento (Frontend + Backend Integrado)
-O projeto utiliza um servidor unificado que inicializa o Express REST API na porta `3000` e anexa o middleware de desenvolvimento do Vite:
+O projeto utiliza um servidor unificado que inicializa a API Express na porta 3000 e integra o middleware de desenvolvimento do Vite.
 
-```bash
 npm run dev
-```
 
-Abra seu navegador em:
-```
+Depois, acesse:
+
 http://localhost:3000
-```
-
----
-
-## 🛠️ Scripts Disponíveis
-
-| Comando | Descrição |
-| :--- | :--- |
-| `npm run dev` | Inicia o servidor full-stack (API Express + Vite HMR) com `tsx` na porta 3000 |
-| `npm run build` | Compila os assets estáticos do React com Vite e compila o `server.ts` com `esbuild` em `dist/server.cjs` |
-| `npm run start` | Executa o bundle de produção compilado (`node dist/server.cjs`) |
-
----
-
-## 📦 Estrutura de Pastas
-
-```
-├── backend/                  # Servidor Backend REST (Express + TypeScript)
-│   ├── routes/              # Rotas REST da API
-│   │   ├── cards.ts         # GET /cards (com paginação e filtros)
-│   │   ├── collection.ts    # CRUD /collection e /completion
-│   │   ├── decks.ts         # CRUD /decks, /validate, /missing, /completion
-│   │   └── importExport.ts  # POST /import/collection, GET /export/*
-│   ├── services/            # Camada de Serviços e Regras de Negócio
+🛠️ Scripts Disponíveis
+Comando	Descrição
+npm run dev	Inicia o ambiente de desenvolvimento com Express + Vite HMR utilizando tsx
+npm run build	Compila o frontend com Vite e o servidor com esbuild
+npm run start	Executa o bundle de produção localizado em dist/server.cjs
+📦 Estrutura do Projeto
+├── backend/
+│   ├── routes/
+│   │   ├── cards.ts
+│   │   ├── collection.ts
+│   │   ├── decks.ts
+│   │   └── importExport.ts
+│   │
+│   ├── services/
 │   │   ├── cardService.ts
 │   │   ├── collectionService.ts
 │   │   ├── deckService.ts
-│   │   ├── deckValidator.ts # Validador oficial de regras e zonas
-│   │   ├── importParser.ts  # Parser de lista de texto
-│   │   └── exportService.ts # Formatador de exportação
-│   ├── catalog.ts           # Banco de dados de cartas e seed de dados
-│   ├── store.ts             # Estado em memória
-│   └── types.ts             # Tipos TypeScript do backend
+│   │   ├── deckValidator.ts
+│   │   ├── importParser.ts
+│   │   └── exportService.ts
+│   │
+│   ├── catalog.ts
+│   ├── store.ts
+│   └── types.ts
 │
-├── src/                      # Frontend SPA (React + Tailwind CSS)
-│   ├── api/                 # Cliente HTTP que bate nas rotas /api
-│   │   ├── client.ts        # Wrapper de fetch com tipagem e tratamento de erros
+├── src/
+│   ├── api/
+│   │   ├── client.ts
 │   │   ├── cardsApi.ts
 │   │   ├── collectionApi.ts
 │   │   ├── decksApi.ts
 │   │   └── importExportApi.ts
-│   ├── components/          # Componentes visuais
-│   │   ├── catalog/         # Catálogo de cartas, filtros, paginação e modal
-│   │   ├── collection/      # Gestão da coleção física/digital e barra de progresso
-│   │   ├── decks/           # Lista de decks, editor de zonas e validação oficial
-│   │   ├── importExport/    # Importador/Exportador com feedback em tempo real
-│   │   └── common/          # Navbar, badges e utilitários
-│   ├── types/               # Tipos TypeScript compartilhados no front
-│   ├── utils/               # Formatadores e helpers visuais de facção/raridade
-│   ├── App.tsx              # Componente raiz com navegação e toasts
-│   ├── main.tsx             # Ponto de entrada do React
-│   └── index.css            # Tailwind CSS
+│   │
+│   ├── components/
+│   │   ├── catalog/
+│   │   ├── collection/
+│   │   ├── decks/
+│   │   ├── importExport/
+│   │   └── common/
+│   │
+│   ├── types/
+│   ├── utils/
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
 │
-└── server.ts                 # Ponto de entrada que monta o Express e o Vite
-```
+└── server.ts
+🃏 Funcionalidades
 
----
+O projeto atualmente permite:
 
-## 🃏 Regras Oficiais de Validação de Decks
+Navegar pelo catálogo de cartas
+Filtrar e paginar cartas
+Gerenciar uma coleção
+Visualizar o progresso da coleção
+Criar e editar decks
+Organizar cartas por zonas
+Validar decks de acordo com as regras implementadas
+Identificar cartas faltantes para completar um deck
+Calcular a completude de decks e coleção
+Importar listas de cartas
+Exportar decks e coleções
+Exibir feedback de operações e validações através da interface
+⚔️ Validação de Decks
 
-O backend valida as seguintes regras e zonas:
+A validação é realizada no backend através do deckValidator.ts.
 
-1. **LEGEND**: Exatamente 1 carta do tipo `LEGEND`.
-2. **CHAMPION**: Exatamente 1 carta do tipo `CHAMPION`.
-3. **MAIN**: Exatamente 39 cartas (tipos `UNIT` ou `SPELL`).
-4. **RUNE**: Exatamente 12 cartas (tipo `RUNE`).
-5. **BATTLEFIELD**: Exatamente 3 cartas (tipo `BATTLEFIELD`).
-6. **SIDEBOARD**: Até 8 cartas adicionais de `UNIT` ou `SPELL` (aviso se > 8).
-7. **SIDEBOARD_BATTLEFIELD**: Até 2 cartas adicionais de `BATTLEFIELD` (aviso se > 2).
-8. **Limite de Cópias**: No máximo 3 cópias de uma mesma carta entre Main + Sideboard (com exceção de Runas, Lendas e Campeões).
-9. **Cartas Banidas**: Cartas marcadas como banidas geram erro impeditivo de validação.
-10. **Compatibilidade de Facção**: Validação de cores/facções alinhadas à Lenda e ao Campeão.
+As regras implementadas incluem:
+
+LEGEND — exatamente 1 carta do tipo LEGEND.
+CHAMPION — exatamente 1 carta do tipo CHAMPION.
+MAIN — exatamente 39 cartas dos tipos UNIT ou SPELL.
+RUNE — exatamente 12 cartas do tipo RUNE.
+BATTLEFIELD — exatamente 3 cartas do tipo BATTLEFIELD.
+SIDEBOARD — até 8 cartas adicionais dos tipos UNIT ou SPELL.
+SIDEBOARD_BATTLEFIELD — até 2 cartas adicionais do tipo BATTLEFIELD.
+Limite de cópias — no máximo 3 cópias da mesma carta entre Main e Sideboard, considerando as exceções aplicáveis a Runas, Lendas e Campeões.
+Cartas banidas — cartas marcadas como banidas impedem a validação do deck.
+Compatibilidade de facção — verificação de compatibilidade das cartas com as facções definidas pela Lenda e pelo Campeão.
+
+As regras de construção e as restrições implementadas foram utilizadas como referência para o conjunto de regras do jogo durante o desenvolvimento.
+
+🧠 Desenvolvimento e uso de IA
+
+A Inteligência Artificial fez parte do processo de desenvolvimento deste projeto como uma ferramenta de apoio de desenvolvimento, principalmente através do Google AI Studio.
+
+Entre os usos estão:
+
+Estruturar linhas de códigos repetitivos 
+Explicação de erros e comportamentos do código
+Revisão e refatoração de trechos
+Auxílio na estruturação de componentes e serviços
+Investigação de possíveis soluções para problemas encontrados durante o desenvolvimento
+Apoio no desenvolvimento e documentação de funcionalidades
+
+A implementação não foi tratada como um processo de geração automática do projeto. O código foi integrado, testado, adaptado e validado durante o desenvolvimento, com decisões de estrutura e funcionamento sendo tomadas de acordo com os requisitos do projeto.
+
+O objetivo também foi utilizar essas ferramentas como parte do processo de aprendizado e desenvolvimento, e não apenas como uma forma de gerar código pronto.
+
+🎯 Objetivo do Projeto
+
+O Rift TCG foi desenvolvido principalmente como projeto de estudo e experimentação, buscando colocar em prática conceitos de:
+
+Desenvolvimento full-stack
+APIs REST
+React e TypeScript
+Arquitetura de aplicações web
+Separação de responsabilidades
+Regras de negócio
+Validação de dados
+Integração entre frontend e backend
+Desenvolvimento assistido por IA
+Organização e documentação de projetos
+
+O projeto continua sujeito a melhorias e novas funcionalidades.
+
+📌 Tecnologias
+
+Frontend
+
+React 19
+TypeScript
+Tailwind CSS
+Vite
+
+Backend
+
+Node.js
+Express
+TypeScript
+tsx
+esbuild
+
+Ferramentas
+
+Git / GitHub
+Google AI Studio
+npm
